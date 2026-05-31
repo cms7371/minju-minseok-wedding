@@ -1,9 +1,18 @@
-import { invitation } from "./config.js";
+import { invitation } from "./config.js?v=20260601-fiona-date";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 const date = new Date(invitation.wedding.dateISO);
+const heroMonthDay = new Intl.DateTimeFormat("en-US", {
+  month: "2-digit",
+  day: "2-digit",
+}).format(date).replace("/", ". ");
+const heroTime = new Intl.DateTimeFormat("en-US", {
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+}).format(date).replace(" ", " ");
 const formatDate = new Intl.DateTimeFormat("ko-KR", {
   year: "numeric",
   month: "long",
@@ -17,13 +26,21 @@ const formatDate = new Intl.DateTimeFormat("ko-KR", {
 const fieldMap = {
   groom: invitation.couple.groom,
   bride: invitation.couple.bride,
+  groomUpper: invitation.couple.groomEnglish || invitation.couple.groomFull.toUpperCase(),
+  brideUpper: invitation.couple.brideEnglish || invitation.couple.brideFull.toUpperCase(),
   groomParents: invitation.families.groomParents,
   brideParents: invitation.families.brideParents,
   dateText: invitation.wedding.dateText,
   venue: invitation.wedding.venue,
   hall: invitation.wedding.hall,
   address: invitation.wedding.address,
+  addressDetail: invitation.wedding.addressDetail,
+  transit: invitation.wedding.transit,
   venueLine: `${invitation.wedding.venue} ${invitation.wedding.hall}`,
+  venueUpper: (invitation.wedding.venueEnglish || invitation.wedding.venue).toUpperCase(),
+  heroYear: String(date.getFullYear()),
+  heroDate: heroMonthDay,
+  heroTime,
   calendarDate: formatDate.format(date),
   timeLeft: makeTimeLeft(date),
 };
@@ -73,6 +90,7 @@ function renderAccounts() {
 
 function renderGallery() {
   const list = $('[data-list="gallery"]');
+  if (!list) return;
   list.innerHTML = "";
   invitation.gallery.forEach((image) => {
     const img = document.createElement("img");
@@ -190,4 +208,3 @@ renderMessage();
 renderAccounts();
 renderGallery();
 wireActions();
-

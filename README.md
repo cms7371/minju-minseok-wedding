@@ -14,7 +14,7 @@ Replace these placeholders before publishing:
 - Contact phone numbers
 - Bank account fields
 - RSVP endpoint or form handling
-- `assets/cover.png` with a real couple photo if available
+- `assets/intro.jpg` with the intro photo
 
 ## Preview locally
 
@@ -32,4 +32,3 @@ Use one of these options:
 - Project page repository: publish from `main` branch root.
 
 For a custom domain, copy `CNAME.example` to `CNAME` and replace the value with the purchased domain.
-

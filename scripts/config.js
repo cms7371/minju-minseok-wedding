@@ -1,22 +1,27 @@
 export const invitation = {
   couple: {
     groom: "민석",
-    bride: "OO",
-    groomFull: "홍민석",
-    brideFull: "김OO",
+    bride: "민주",
+    groomFull: "채민석",
+    brideFull: "김민주",
+    groomEnglish: "MINSEOK",
+    brideEnglish: "MINJU",
   },
   families: {
-    groomParents: "홍길동 · 이영희의 아들",
-    brideParents: "김철수 · 박영자의 딸",
+    groomParents: "채규필 · 박미화의 장남 민석",
+    brideParents: "김일회 · 이의진의 장녀 민주",
   },
   wedding: {
-    dateISO: "2026-10-24T12:30:00+09:00",
-    dateText: "2026년 10월 24일 토요일 낮 12시 30분",
-    venue: "웨딩홀 이름",
-    hall: "3층 그랜드볼룸",
-    address: "서울특별시 강남구 예식로 123",
-    mapUrl: "https://map.naver.com/",
-    calendarTitle: "민석 · OO 결혼식",
+    dateISO: "2026-09-06T11:00:00+09:00",
+    dateText: "2026년 9월 6일 일요일 오전 11시",
+    venue: "르비르모어",
+    venueEnglish: "levir more",
+    hall: "A동 2층 웨딩홀",
+    address: "서울시 강남구 테헤란로 406 A동 2층 웨딩홀",
+    addressDetail: "대치동, 샹제리제센터",
+    transit: "선릉역 2호선 지하 연결 · 단독홀",
+    mapUrl: "https://map.naver.com/p/search/%EB%A5%B4%EB%B9%84%EB%A5%B4%EB%AA%A8%EC%96%B4",
+    calendarTitle: "민석 · 민주 결혼식",
   },
   message: [
     "서로의 계절을 함께 건너며",
@@ -30,16 +35,13 @@ export const invitation = {
     brideFather: "010-3333-3333",
   },
   accounts: [
-    { side: "신랑", bank: "국민은행", number: "000000-00-000000", holder: "홍민석" },
-    { side: "신부", bank: "신한은행", number: "000-000-000000", holder: "김OO" },
+    { side: "신랑", bank: "국민은행", number: "000000-00-000000", holder: "채민석" },
+    { side: "신부", bank: "신한은행", number: "000-000-000000", holder: "김민주" },
   ],
-  gallery: [
-    { src: "assets/cover.png", alt: "청첩장 커버 이미지" },
-  ],
+  gallery: [],
   rsvp: {
     enabled: true,
     submitMode: "mailto",
     email: "hello@example.com",
   },
 };
-

@@ -3,25 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#fbfaf7" />
+    <meta name="theme-color" content="#f7fbff" />
     <meta name="description" content="모바일 청첩장" />
     <meta property="og:title" content="모바일 청첩장" />
     <meta property="og:description" content="소중한 날에 초대합니다." />
-    <meta property="og:image" content="assets/cover.png" />
+    <meta property="og:image" content="assets/intro.jpg" />
     <title>모바일 청첩장</title>
-    <link rel="preload" href="assets/cover.png" as="image" />
-    <link rel="stylesheet" href="styles.css" />
-    <script type="module" src="scripts/main.js"></script>
+    <link rel="preconnect" href="https://use.typekit.net" />
+    <link rel="stylesheet" href="https://use.typekit.net/mvm3pnb.css" />
+    <link rel="stylesheet" href="styles.css?v=20260601-well-frame-2" />
+    <script type="module" src="scripts/main.js?v=20260601-fiona-date"></script>
   </head>
   <body>
     <main class="page-shell">
       <section class="hero" aria-labelledby="hero-title">
-        <img class="hero__image" src="assets/cover.png" alt="" />
-        <div class="hero__shade"></div>
-        <div class="hero__content">
-          <p class="hero__date" data-field="dateText"></p>
-          <h1 id="hero-title"><span data-field="groom"></span> · <span data-field="bride"></span></h1>
-          <p class="hero__venue" data-field="venueLine"></p>
+        <div class="hero__frame">
+          <h1 id="hero-title">Save the Date</h1>
+          <p class="hero__name hero__name--top" data-field="groomUpper"></p>
+          <p class="hero__amp" aria-hidden="true">&amp;</p>
+          <p class="hero__name hero__name--bottom" data-field="brideUpper"></p>
+          <figure class="hero__photo-frame">
+            <img class="hero__photo" src="assets/intro.jpg" alt="민석과 민주의 웨딩 사진" />
+          </figure>
+          <div class="hero__date-line" aria-label="예식일">
+            <span data-field="heroYear"></span>
+            <span data-field="heroDate"></span>
+            <span data-field="heroTime"></span>
+          </div>
+          <p class="hero__venue" data-field="venueUpper"></p>
         </div>
       </section>
 
@@ -49,6 +58,8 @@
         <h2 data-field="venue"></h2>
         <p data-field="hall"></p>
         <p class="address" data-field="address"></p>
+        <p class="address-detail" data-field="addressDetail"></p>
+        <p class="address-detail" data-field="transit"></p>
         <div class="action-row">
           <a class="button" data-field-link="mapUrl" target="_blank" rel="noreferrer">지도 열기</a>
           <a class="button button--ghost" data-action="copyAddress" href="#">주소 복사</a>
@@ -71,11 +82,6 @@
           <span aria-hidden="true">+</span>
         </button>
         <div class="account-list" data-list="accounts" hidden></div>
-      </section>
-
-      <section class="section gallery">
-        <p class="kicker">Gallery</p>
-        <div class="gallery-track" data-list="gallery"></div>
       </section>
 
       <section class="section rsvp" data-rsvp>
@@ -108,4 +114,3 @@
     <div class="toast" role="status" aria-live="polite" hidden></div>
   </body>
 </html>
-
