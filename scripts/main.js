@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260603-place-links-1";
+import { invitation } from "./config.js?v=20260603-contact-motion-1";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -45,6 +45,39 @@ const fieldMap = {
   timeLeft: makeTimeLeft(date),
 };
 
+const contactGroups = [
+  {
+    title: "신랑측",
+    members: [
+      { key: "groom", label: "신랑", name: invitation.couple.groomFull },
+      { key: "groomFather", label: "아버지", name: "채규필" },
+      { key: "groomMother", label: "어머니", name: "박미화" },
+    ],
+  },
+  {
+    title: "신부측",
+    members: [
+      { key: "bride", label: "신부", name: invitation.couple.brideFull },
+      { key: "brideFather", label: "아버지", name: "김일회" },
+      { key: "brideMother", label: "어머니", name: "이의진" },
+    ],
+  },
+];
+
+const icons = {
+  copy: `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 8.5A2.5 2.5 0 0 1 10.5 6h7A2.5 2.5 0 0 1 20 8.5v7A2.5 2.5 0 0 1 17.5 18h-7A2.5 2.5 0 0 1 8 15.5v-7Z"></path>
+      <path d="M5 14.5V6.8A1.8 1.8 0 0 1 6.8 5h7.7"></path>
+    </svg>
+  `,
+  phone: `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6.7 4.8 8.9 4a1.6 1.6 0 0 1 2 .9l1 2.4a1.6 1.6 0 0 1-.4 1.8l-1.2 1.1a9.2 9.2 0 0 0 4.5 4.5l1.1-1.2a1.6 1.6 0 0 1 1.8-.4l2.4 1a1.6 1.6 0 0 1 .9 2l-.8 2.2a2.2 2.2 0 0 1-2.3 1.5C9.9 19.3 4.7 14.1 4.2 6.1a2.2 2.2 0 0 1 1.5-2.3Z"></path>
+    </svg>
+  `,
+};
+
 function renderFields() {
   $$("[data-field]").forEach((node) => {
     node.textContent = fieldMap[node.dataset.field] || "";
@@ -85,6 +118,50 @@ function renderAccounts() {
       copyText(`${account.bank} ${account.number} ${account.holder}`);
     });
     list.append(item);
+  });
+}
+
+function renderContacts() {
+  const list = $('[data-list="contacts"]');
+  if (!list) return;
+  list.innerHTML = "";
+
+  contactGroups.forEach((group, index) => {
+    const panelId = `contact-panel-${index}`;
+    const groupNode = document.createElement("section");
+    groupNode.className = "contact-group";
+    groupNode.innerHTML = `
+      <button class="contact-group__toggle" type="button" aria-expanded="false" aria-controls="${panelId}" data-action="toggleContactGroup">
+        <span>${group.title} 연락처 확인하기</span>
+        <span class="contact-group__mark" aria-hidden="true">+</span>
+      </button>
+      <div class="contact-group__panel" id="${panelId}"></div>
+    `;
+    const panel = $(".contact-group__panel", groupNode);
+
+    group.members.forEach((entry) => {
+      const phone = invitation.contacts[entry.key];
+      if (!phone) return;
+
+      const item = document.createElement("div");
+      item.className = "contact-item";
+      item.innerHTML = `
+        <span class="contact-item__role">${entry.label}</span>
+        <strong>${entry.name}</strong>
+        <span class="contact-item__phone">${phone}</span>
+        <div class="contact-item__actions">
+          <button class="contact-icon-button" type="button" data-copy-phone="${phone}" aria-label="${entry.label} 번호 복사">
+            ${icons.copy}
+          </button>
+          <a class="contact-icon-button" href="tel:${phone.replaceAll("-", "")}" aria-label="${entry.label}에게 전화">
+            ${icons.phone}
+          </a>
+        </div>
+      `;
+      panel.append(item);
+    });
+
+    list.append(groupNode);
   });
 }
 
@@ -284,21 +361,46 @@ function wireActions() {
     copyText(invitation.wedding.address);
   });
   $('[data-action="toggleAccounts"]').addEventListener("click", (event) => {
-    const button = event.currentTarget;
-    const list = $('[data-list="accounts"]');
-    const expanded = button.getAttribute("aria-expanded") === "true";
-    button.setAttribute("aria-expanded", String(!expanded));
-    button.lastElementChild.textContent = expanded ? "+" : "-";
-    list.hidden = expanded;
+    toggleList(event.currentTarget, $('[data-list="accounts"]'));
+  });
+  $$('[data-action="toggleContactGroup"]').forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const panel = document.getElementById(event.currentTarget.getAttribute("aria-controls"));
+      toggleContactGroup(event.currentTarget, panel);
+    });
   });
 
-  Object.entries(invitation.contacts).forEach(([key, phone]) => {
-    const link = $(`[data-call="${key}"]`);
-    if (link) link.href = `tel:${phone.replaceAll("-", "")}`;
+  $$("[data-copy-phone]").forEach((button) => {
+    button.addEventListener("click", () => copyText(button.dataset.copyPhone));
   });
+}
 
-  $(".rsvp-form").addEventListener("submit", submitRsvp);
-  if (!invitation.rsvp.enabled) $("[data-rsvp]").hidden = true;
+function toggleList(button, list, collapsedText, expandedText) {
+  const expanded = button.getAttribute("aria-expanded") === "true";
+  button.setAttribute("aria-expanded", String(!expanded));
+  button.lastElementChild.textContent = expanded ? "+" : "-";
+  if (collapsedText && expandedText) {
+    button.firstElementChild.textContent = expanded ? collapsedText : expandedText;
+  }
+  list.hidden = expanded;
+}
+
+function toggleContactGroup(button, panel) {
+  const expanded = button.getAttribute("aria-expanded") === "true";
+  button.setAttribute("aria-expanded", String(!expanded));
+  $(".contact-group__mark", button).textContent = expanded ? "+" : "-";
+
+  if (expanded) {
+    panel.style.maxHeight = `${panel.scrollHeight}px`;
+    requestAnimationFrame(() => {
+      panel.style.maxHeight = "0px";
+      panel.dataset.open = "false";
+    });
+    return;
+  }
+
+  panel.dataset.open = "true";
+  panel.style.maxHeight = `${panel.scrollHeight}px`;
 }
 
 function makeTimeLeft(targetDate) {
@@ -312,29 +414,6 @@ function makeTimeLeft(targetDate) {
 async function copyText(text) {
   await navigator.clipboard.writeText(text);
   showToast("복사했습니다.");
-}
-
-function submitRsvp(event) {
-  event.preventDefault();
-  const form = event.currentTarget;
-  const data = Object.fromEntries(new FormData(form).entries());
-  const body = [
-    `이름: ${data.name}`,
-    `참석 여부: ${data.attendance}`,
-    `동행 인원: ${data.guests || 0}`,
-    `메모: ${data.memo || "-"}`,
-  ].join("\n");
-
-  if (invitation.rsvp.submitMode === "mailto") {
-    const params = new URLSearchParams({
-      subject: `[청첩장 RSVP] ${data.name}`,
-      body,
-    });
-    location.href = `mailto:${invitation.rsvp.email}?${params}`;
-    return;
-  }
-
-  showToast("RSVP 연동 방식이 필요합니다.");
 }
 
 let toastTimer;
@@ -351,6 +430,7 @@ function showToast(text) {
 renderFields();
 renderMessage();
 renderAccounts();
+renderContacts();
 renderGallery();
 renderMap();
 renderCalendar();

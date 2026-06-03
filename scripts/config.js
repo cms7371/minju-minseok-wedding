@@ -37,16 +37,13 @@ export const invitation = {
     groom: "010-0000-0000",
     bride: "010-1111-1111",
     groomFather: "010-2222-2222",
+    groomMother: "010-4444-4444",
     brideFather: "010-3333-3333",
+    brideMother: "010-5555-5555",
   },
   accounts: [
     { side: "신랑", bank: "국민은행", number: "000000-00-000000", holder: "채민석" },
     { side: "신부", bank: "신한은행", number: "000-000-000000", holder: "김민주" },
   ],
   gallery: [],
-  rsvp: {
-    enabled: true,
-    submitMode: "mailto",
-    email: "hello@example.com",
-  },
 };

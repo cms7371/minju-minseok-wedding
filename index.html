@@ -11,8 +11,8 @@
     <title>모바일 청첩장</title>
     <link rel="preconnect" href="https://use.typekit.net" />
     <link rel="stylesheet" href="https://use.typekit.net/mvm3pnb.css" />
-    <link rel="stylesheet" href="styles.css?v=20260603-place-links-1" />
-    <script type="module" src="scripts/main.js?v=20260603-place-links-1"></script>
+    <link rel="stylesheet" href="styles.css?v=20260603-contact-motion-1" />
+    <script type="module" src="scripts/main.js?v=20260603-contact-motion-1"></script>
   </head>
   <body>
     <main class="page-shell">
@@ -64,12 +64,7 @@
 
       <section class="section contacts">
         <p class="kicker">Contact</p>
-        <div class="contact-grid">
-          <a data-call="groom">신랑에게 연락</a>
-          <a data-call="bride">신부에게 연락</a>
-          <a data-call="groomFather">신랑측 혼주</a>
-          <a data-call="brideFather">신부측 혼주</a>
-        </div>
+        <div class="contact-list" data-list="contacts"></div>
       </section>
 
       <section class="section accounts">
@@ -78,33 +73,6 @@
           <span aria-hidden="true">+</span>
         </button>
         <div class="account-list" data-list="accounts" hidden></div>
-      </section>
-
-      <section class="section rsvp" data-rsvp>
-        <p class="kicker">RSVP</p>
-        <h2>참석 의사를 알려주세요</h2>
-        <form class="rsvp-form">
-          <label>
-            이름
-            <input name="name" autocomplete="name" required />
-          </label>
-          <label>
-            참석 여부
-            <select name="attendance" required>
-              <option value="참석">참석</option>
-              <option value="불참">불참</option>
-            </select>
-          </label>
-          <label>
-            동행 인원
-            <input name="guests" type="number" min="0" max="9" value="0" />
-          </label>
-          <label>
-            메모
-            <textarea name="memo" rows="3"></textarea>
-          </label>
-          <button class="button" type="submit">전송</button>
-        </form>
       </section>
     </main>
     <div class="toast" role="status" aria-live="polite" hidden></div>

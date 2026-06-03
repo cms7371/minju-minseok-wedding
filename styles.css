@@ -251,12 +251,13 @@ h2 {
   letter-spacing: 0;
 }
 
-.rsvp {
+.accounts {
   background: var(--soft);
 }
 
 .timeline,
-.venue {
+.venue,
+.contacts {
   padding-top: 78px;
   padding-bottom: 76px;
   background: var(--paper);
@@ -275,7 +276,8 @@ h2 {
 
 .intro .kicker,
 .timeline .kicker,
-.venue .kicker {
+.venue .kicker,
+.contacts .kicker {
   margin-bottom: 28px;
   color: var(--signature-blue);
   font-family: var(--display-font);
@@ -480,7 +482,6 @@ h2 {
 }
 
 .button,
-.contact-grid a,
 .section-toggle {
   min-height: 48px;
   border: 1px solid var(--accent);
@@ -503,17 +504,142 @@ h2 {
   color: var(--accent-strong);
 }
 
-.contact-grid {
+.contact-list {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 0;
+  border-top: 1px solid var(--line);
 }
 
-.contact-grid a {
-  background: var(--white);
+.contact-group {
+  display: grid;
+}
+
+.contact-group + .contact-group {
+  border-top: 1px solid var(--line);
+}
+
+.contact-group__toggle {
+  width: 100%;
+  min-height: 56px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.contact-group__toggle:focus-visible {
+  outline: 2px solid rgb(111 159 189 / 34%);
+  outline-offset: -2px;
+}
+
+.contact-group__toggle > span:first-child {
   color: var(--accent-strong);
-  border-color: var(--line);
-  box-shadow: 0 10px 24px rgb(65 46 34 / 8%);
+  font-family: var(--display-font);
+  font-size: 17px;
+  font-weight: 360;
+  letter-spacing: 0;
+}
+
+.contact-group__mark {
+  width: 18px;
+  color: var(--accent-strong);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  text-align: right;
+}
+
+.contact-group__panel {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+  opacity: 0;
+  transition: max-height 260ms ease, opacity 180ms ease, padding 260ms ease;
+}
+
+.contact-group__panel[data-open="true"] {
+  padding-bottom: 12px;
+  opacity: 1;
+}
+
+.contact-item {
+  display: grid;
+  grid-template-columns: 42px auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 4px 0;
+  text-align: left;
+}
+
+.contact-item + .contact-item {
+  border-top: 1px solid rgb(216 230 239 / 62%);
+}
+
+.contact-item__role,
+.contact-item__phone {
+  color: var(--muted);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.contact-item__role {
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.contact-item strong {
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.contact-item__phone {
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-item__actions {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.contact-icon-button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--accent-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.contact-icon-button svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
 .section-toggle {
@@ -523,6 +649,12 @@ h2 {
   color: var(--ink);
   border-color: var(--line);
 }
+
+.section-toggle:focus-visible {
+  outline: 2px solid rgb(111 159 189 / 45%);
+  outline-offset: 2px;
+}
+
 
 .account-list {
   margin-top: 14px;
@@ -565,32 +697,6 @@ h2 {
   border-radius: 8px;
   scroll-snap-align: start;
   box-shadow: var(--shadow);
-}
-
-.rsvp-form {
-  display: grid;
-  gap: 14px;
-}
-
-.rsvp-form label {
-  display: grid;
-  gap: 8px;
-  color: var(--muted);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.rsvp-form input,
-.rsvp-form select,
-.rsvp-form textarea {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--white);
-  color: var(--ink);
-  padding: 13px 14px;
-  font-size: 16px;
 }
 
 .toast {
