@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260603-invitation-copy-1";
+import { invitation } from "./config.js?v=20260603-calendar-card-countdown";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -99,6 +99,63 @@ function renderGallery() {
     img.loading = "lazy";
     list.append(img);
   });
+}
+
+function renderCalendar() {
+  const root = $("[data-calendar]");
+  if (!root) return;
+
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const targetDay = date.getDate();
+  const firstWeekday = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
+  const timeText = `${date.getHours() < 12 ? "오전" : "오후"} ${date.getHours() % 12 || 12}시`;
+
+  root.innerHTML = "";
+
+  const header = document.createElement("div");
+  header.className = "calendar-card__header";
+  header.innerHTML = `
+    <strong>${year}년 ${month + 1}월</strong>
+    <span>${timeText}</span>
+  `;
+  root.append(header);
+
+  const grid = document.createElement("div");
+  grid.className = "calendar-card__grid";
+  weekdays.forEach((weekday) => {
+    const cell = document.createElement("span");
+    cell.className = "calendar-card__weekday";
+    cell.textContent = weekday;
+    grid.append(cell);
+  });
+
+  const totalCells = Math.ceil((firstWeekday + daysInMonth) / 7) * 7;
+  for (let index = 0; index < totalCells; index++) {
+    const day = index - firstWeekday + 1;
+    const cell = document.createElement("span");
+    cell.className = "calendar-card__day";
+    if (day < 1 || day > daysInMonth) {
+      cell.classList.add("calendar-card__day--empty");
+      cell.setAttribute("aria-hidden", "true");
+    } else {
+      cell.textContent = String(day);
+      if (day === targetDay) {
+        cell.classList.add("calendar-card__day--wedding");
+        cell.setAttribute("aria-label", `${day}일 예식일`);
+      }
+    }
+    grid.append(cell);
+  }
+
+  root.append(grid);
+
+  const footer = document.createElement("p");
+  footer.className = "calendar-card__time-left";
+  footer.textContent = makeTimeLeft(date);
+  root.append(footer);
 }
 
 function wireActions() {
@@ -207,4 +264,5 @@ renderFields();
 renderMessage();
 renderAccounts();
 renderGallery();
+renderCalendar();
 wireActions();
