@@ -45,5 +45,9 @@ export const invitation = {
     { side: "신랑", bank: "국민은행", number: "000000-00-000000", holder: "채민석" },
     { side: "신부", bank: "신한은행", number: "000-000-000000", holder: "김민주" },
   ],
-  gallery: [],
+  gallery: {
+    productionHost: "https://assets.minju-minseok-wedding.life",
+    path: "gallery-draft-1",
+    count: 22,
+  },
 };

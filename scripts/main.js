@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260603-contact-motion-1";
+import { invitation } from "./config.js?v=20260603-gallery-4col-1";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -44,6 +44,9 @@ const fieldMap = {
   calendarDate: formatDate.format(date),
   timeLeft: makeTimeLeft(date),
 };
+
+let galleryImages = [];
+let activeGalleryIndex = 0;
 
 const contactGroups = [
   {
@@ -169,13 +172,60 @@ function renderGallery() {
   const list = $('[data-list="gallery"]');
   if (!list) return;
   list.innerHTML = "";
-  invitation.gallery.forEach((image) => {
+  galleryImages = getGalleryImages();
+
+  galleryImages.forEach((image, index) => {
+    const button = document.createElement("button");
+    button.className = "gallery-item";
+    button.type = "button";
+    button.dataset.galleryIndex = String(index);
+    button.setAttribute("aria-label", `${image.alt} 크게 보기`);
+
     const img = document.createElement("img");
-    img.src = image.src;
+    img.src = image.thumbnail;
+    if (image.width) img.width = image.width;
+    if (image.height) img.height = image.height;
     img.alt = image.alt;
     img.loading = "lazy";
-    list.append(img);
+    button.append(img);
+    list.append(button);
   });
+}
+
+function getGalleryImages() {
+  const gallery = invitation.gallery;
+  if (!gallery?.count) return [];
+
+  const host = getGalleryHost();
+  if (!host) return [];
+
+  const baseUrl = [host, gallery.path].filter(Boolean).join("/");
+  return Array.from({ length: gallery.count }, (_, index) => {
+    const number = String(index + 1).padStart(2, "0");
+    return {
+      src: `${baseUrl}/gallery-${number}.webp`,
+      thumbnail: `${baseUrl}/gallery-${number}-thumb.webp`,
+      alt: `웨딩 갤러리 사진 ${index + 1}`,
+    };
+  });
+}
+
+function getGalleryHost() {
+  const queryHost = new URLSearchParams(location.search).get("galleryHost")?.trim();
+  const localHost = getLocalGalleryHost();
+  return stripTrailingSlash(queryHost || localHost || invitation.gallery.productionHost);
+}
+
+function getLocalGalleryHost() {
+  try {
+    return localStorage.getItem("weddingGalleryHost")?.trim() || "";
+  } catch {
+    return "";
+  }
+}
+
+function stripTrailingSlash(value) {
+  return value ? value.replace(/\/+$/, "") : "";
 }
 
 function renderMap() {
@@ -373,6 +423,54 @@ function wireActions() {
   $$("[data-copy-phone]").forEach((button) => {
     button.addEventListener("click", () => copyText(button.dataset.copyPhone));
   });
+
+  $$("[data-gallery-index]").forEach((button) => {
+    button.addEventListener("click", () => openGallery(Number(button.dataset.galleryIndex)));
+  });
+  $('[data-action="closeGallery"]')?.addEventListener("click", closeGallery);
+  $('[data-action="prevGallery"]')?.addEventListener("click", () => moveGallery(-1));
+  $('[data-action="nextGallery"]')?.addEventListener("click", () => moveGallery(1));
+  $('[data-gallery-lightbox]')?.addEventListener("click", (event) => {
+    if (event.target === event.currentTarget) closeGallery();
+  });
+  document.addEventListener("keydown", (event) => {
+    const lightbox = $("[data-gallery-lightbox]");
+    if (!lightbox || lightbox.hidden) return;
+    if (event.key === "Escape") closeGallery();
+    if (event.key === "ArrowLeft") moveGallery(-1);
+    if (event.key === "ArrowRight") moveGallery(1);
+  });
+}
+
+function openGallery(index) {
+  if (!galleryImages.length) return;
+  activeGalleryIndex = index;
+  updateGalleryLightbox();
+  const lightbox = $("[data-gallery-lightbox]");
+  lightbox.hidden = false;
+  document.body.classList.add("is-gallery-open");
+}
+
+function closeGallery() {
+  const lightbox = $("[data-gallery-lightbox]");
+  if (!lightbox) return;
+  lightbox.hidden = true;
+  document.body.classList.remove("is-gallery-open");
+}
+
+function moveGallery(offset) {
+  if (!galleryImages.length) return;
+  activeGalleryIndex = (activeGalleryIndex + offset + galleryImages.length) % galleryImages.length;
+  updateGalleryLightbox();
+}
+
+function updateGalleryLightbox() {
+  const image = galleryImages[activeGalleryIndex];
+  const img = $("[data-gallery-lightbox-image]");
+  const caption = $("[data-gallery-lightbox-caption]");
+  img.src = image.src;
+  img.alt = image.alt;
+  caption.textContent = `${activeGalleryIndex + 1} / ${galleryImages.length}`;
 }
 
 function toggleList(button, list, collapsedText, expandedText) {
