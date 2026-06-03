@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260603-calendar-card-countdown";
+import { invitation } from "./config.js?v=20260603-static-ics-1";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -159,8 +159,6 @@ function renderCalendar() {
 }
 
 function wireActions() {
-  $('[data-action="calendar"]').href = makeCalendarUrl();
-  $('[data-action="share"]').addEventListener("click", shareInvitation);
   $('[data-action="copyAddress"]').addEventListener("click", (event) => {
     event.preventDefault();
     copyText(invitation.wedding.address);
@@ -191,39 +189,9 @@ function makeTimeLeft(targetDate) {
   return "함께해 주셔서 감사합니다.";
 }
 
-function makeCalendarUrl() {
-  const start = toGoogleDate(date);
-  const end = toGoogleDate(new Date(date.getTime() + 2 * 60 * 60 * 1000));
-  const params = new URLSearchParams({
-    action: "TEMPLATE",
-    text: invitation.wedding.calendarTitle,
-    dates: `${start}/${end}`,
-    location: `${invitation.wedding.venue} ${invitation.wedding.address}`,
-    details: invitation.message.join("\n"),
-  });
-  return `https://calendar.google.com/calendar/render?${params}`;
-}
-
-function toGoogleDate(value) {
-  return value.toISOString().replaceAll("-", "").replaceAll(":", "").replace(".000", "");
-}
-
 async function copyText(text) {
   await navigator.clipboard.writeText(text);
   showToast("복사했습니다.");
-}
-
-async function shareInvitation() {
-  const shareData = {
-    title: document.title,
-    text: invitation.wedding.dateText,
-    url: location.href,
-  };
-  if (navigator.share) {
-    await navigator.share(shareData);
-  } else {
-    await copyText(location.href);
-  }
 }
 
 function submitRsvp(event) {

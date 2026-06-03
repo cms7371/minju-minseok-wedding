@@ -285,6 +285,7 @@ h2 {
 .calendar-card {
   margin: 30px 0 0;
   padding: 30px 24px 26px;
+  border-radius: 8px;
   background: rgb(237 246 251 / 58%);
   color: var(--ink);
   text-align: left;
@@ -373,6 +374,11 @@ h2 {
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-top: 24px;
+}
+
+.calendar-save-button {
+  width: 100%;
+  margin-top: 18px;
 }
 
 .button,

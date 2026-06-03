@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//minju-minseok-wedding//mobile-invitation//KO
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:1788660000000@minju-minseok-wedding.life
+DTSTAMP:20260603T074559Z
+DTSTART:20260906T020000Z
+DTEND:20260906T040000Z
+SUMMARY:민석 · 민주 결혼식
+LOCATION:르비르모어 A동 2층 웨딩홀\, 서울시 강남구 테헤란로 406 A동 2층 웨딩홀
+DESCRIPTION:2026년 9월 6일 일요일 오전 11시\n르비르모어 A동 2층 웨딩홀\, 서울시 강남구 테헤란로 406 A동 2층 웨딩홀\nhttps://minju-minseok-wedding.life/
+END:VEVENT
+END:VCALENDAR
