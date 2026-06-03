@@ -14,6 +14,7 @@
   --hero-gray: #69696b;
   --display-font: "the-seasons", "Cormorant Garamond", Didot, "Bodoni 72 Display", "Times New Roman", serif;
   --detail-font: var(--display-font);
+  --korean-serif-font: "AppleMyungjo", "Noto Serif CJK KR", "Noto Serif KR", "Nanum Myeongjo", Batang, serif;
   --white: #fff;
   --shadow: 0 16px 48px rgb(53 102 133 / 12%);
 }
@@ -222,6 +223,7 @@ a {
   display: grid;
   gap: 8px;
   color: #263648;
+  font-family: var(--korean-serif-font);
   font-size: 20px;
   font-weight: 400;
   line-height: 1.9;
@@ -239,6 +241,7 @@ a {
   display: grid;
   gap: 10px;
   color: var(--muted);
+  font-family: var(--korean-serif-font);
   font-size: 16px;
   line-height: 1.85;
 }
@@ -377,8 +380,14 @@ h2 {
 .venue h2 {
   margin-bottom: 8px;
   color: var(--ink);
+  font-family: var(--korean-serif-font);
   font-size: 32px;
-  font-weight: 520;
+  font-weight: 400;
+}
+
+.venue .address,
+.venue .address-detail {
+  font-family: var(--korean-serif-font);
 }
 
 .map-card {
@@ -540,9 +549,9 @@ h2 {
 
 .contact-group__toggle > span:first-child {
   color: var(--accent-strong);
-  font-family: var(--display-font);
+  font-family: var(--korean-serif-font);
   font-size: 17px;
-  font-weight: 360;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
@@ -596,9 +605,9 @@ h2 {
 
 .contact-item strong {
   color: var(--ink);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--korean-serif-font);
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 400;
   letter-spacing: 0;
   line-height: 1.15;
   white-space: nowrap;
