@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260603-static-ics-1";
+import { invitation } from "./config.js?v=20260603-place-links-1";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -98,6 +98,126 @@ function renderGallery() {
     img.alt = image.alt;
     img.loading = "lazy";
     list.append(img);
+  });
+}
+
+function renderMap() {
+  const map = $("[data-map-embed]");
+  const list = $('[data-list="mapLinks"]');
+  if (!map || !list) return;
+
+  const { latitude, longitude, venue, address } = invitation.wedding;
+  const name = `${venue} ${invitation.wedding.hall}`;
+  const encodedName = encodeURIComponent(name);
+  const lat = Number(latitude);
+  const lng = Number(longitude);
+
+  renderNaverMap(map, lat, lng);
+
+  const links = [
+    {
+      label: "티맵",
+      icon: "assets/map/tmap.png",
+      href: `tmap://route?goalname=${encodedName}&goalx=${lng}&goaly=${lat}`,
+    },
+    {
+      label: "카카오내비",
+      icon: "assets/map/kakao-navi.png",
+      href: `https://map.kakao.com/link/to/${encodedName},${lat},${lng}`,
+    },
+    {
+      label: "네이버지도",
+      icon: "assets/map/naver-map.png",
+      href: "https://naver.me/xl0D3i0o",
+    },
+    {
+      label: "카카오맵",
+      icon: "assets/map/kakao-map.png",
+      href: "https://place.map.kakao.com/404070599",
+    },
+  ];
+
+  list.innerHTML = "";
+  links.forEach((link) => {
+    const anchor = document.createElement("a");
+    anchor.className = "map-link";
+    anchor.href = link.href;
+    anchor.target = "_blank";
+    anchor.rel = "noreferrer";
+    anchor.innerHTML = `
+      <span class="map-link__icon" aria-hidden="true">
+        <img src="${link.icon}" alt="" loading="lazy" />
+      </span>
+      <span>${link.label}</span>
+    `;
+    list.append(anchor);
+  });
+}
+
+async function renderNaverMap(root, lat, lng) {
+  try {
+    await loadNaverMapScript();
+    const position = new window.naver.maps.LatLng(lat, lng);
+    const map = new window.naver.maps.Map(root, {
+      center: position,
+      zoom: 16,
+      minZoom: 13,
+      scaleControl: false,
+      mapDataControl: false,
+      logoControlOptions: {
+        position: window.naver.maps.Position.BOTTOM_LEFT,
+      },
+      zoomControl: true,
+      zoomControlOptions: {
+        position: window.naver.maps.Position.TOP_RIGHT,
+        style: window.naver.maps.ZoomControlStyle.SMALL,
+      },
+    });
+
+    const marker = new window.naver.maps.Marker({
+      map,
+      position,
+      title: invitation.wedding.venue,
+    });
+
+    const infoWindow = new window.naver.maps.InfoWindow({
+      content: `
+        <div class="map-info-window">
+          <strong>${invitation.wedding.venue}</strong>
+          <span>${invitation.wedding.hall}</span>
+        </div>
+      `,
+      borderWidth: 0,
+      disableAnchor: true,
+      backgroundColor: "transparent",
+      pixelOffset: new window.naver.maps.Point(0, -12),
+    });
+    infoWindow.open(map, marker);
+  } catch {
+    root.classList.add("naver-map--error");
+    root.textContent = "지도를 불러오지 못했습니다.";
+  }
+}
+
+function loadNaverMapScript() {
+  if (window.naver?.maps) return Promise.resolve();
+
+  const existing = document.querySelector("[data-naver-map-script]");
+  if (existing) {
+    return new Promise((resolve, reject) => {
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", reject, { once: true });
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.dataset.naverMapScript = "true";
+    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${encodeURIComponent(invitation.wedding.naverMapClientId)}`;
+    script.async = true;
+    script.addEventListener("load", resolve, { once: true });
+    script.addEventListener("error", reject, { once: true });
+    document.head.append(script);
   });
 }
 
@@ -232,5 +352,6 @@ renderFields();
 renderMessage();
 renderAccounts();
 renderGallery();
+renderMap();
 renderCalendar();
 wireActions();

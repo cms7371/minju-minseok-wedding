@@ -11,8 +11,8 @@
     <title>모바일 청첩장</title>
     <link rel="preconnect" href="https://use.typekit.net" />
     <link rel="stylesheet" href="https://use.typekit.net/mvm3pnb.css" />
-    <link rel="stylesheet" href="styles.css?v=20260603-calendar-radius-1" />
-    <script type="module" src="scripts/main.js?v=20260603-static-ics-1"></script>
+    <link rel="stylesheet" href="styles.css?v=20260603-place-links-1" />
+    <script type="module" src="scripts/main.js?v=20260603-place-links-1"></script>
   </head>
   <body>
     <main class="page-shell">
@@ -52,14 +52,14 @@
       <section class="section venue">
         <p class="kicker">Location</p>
         <h2 data-field="venue"></h2>
-        <p data-field="hall"></p>
         <p class="address" data-field="address"></p>
         <p class="address-detail" data-field="addressDetail"></p>
         <p class="address-detail" data-field="transit"></p>
-        <div class="action-row">
-          <a class="button" data-field-link="mapUrl" target="_blank" rel="noreferrer">지도 열기</a>
-          <a class="button button--ghost" data-action="copyAddress" href="#">주소 복사</a>
+        <div class="map-card">
+          <div class="naver-map" data-map-embed role="img" aria-label="르비르모어 지도"></div>
         </div>
+        <div class="map-link-grid" data-list="mapLinks"></div>
+        <button class="button button--ghost address-copy-button" type="button" data-action="copyAddress">주소 복사</button>
       </section>
 
       <section class="section contacts">

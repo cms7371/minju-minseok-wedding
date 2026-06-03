@@ -201,7 +201,6 @@ a {
 
 .section {
   padding: 54px 26px;
-  border-top: 1px solid var(--line);
 }
 
 .kicker {
@@ -217,17 +216,6 @@ a {
 .intro {
   padding: 86px 30px 82px;
   text-align: center;
-}
-
-.intro .kicker,
-.timeline .kicker {
-  margin-bottom: 28px;
-  color: var(--signature-blue);
-  font-family: var(--display-font);
-  font-size: 18px;
-  font-weight: 300;
-  letter-spacing: 0.12rem;
-  text-transform: uppercase;
 }
 
 .message {
@@ -263,23 +251,38 @@ h2 {
   letter-spacing: 0;
 }
 
-.venue,
 .rsvp {
   background: var(--soft);
 }
 
-.timeline {
+.timeline,
+.venue {
   padding-top: 78px;
   padding-bottom: 76px;
-  border-top: 0;
   background: var(--paper);
   text-align: center;
+}
+
+.timeline {
+  border-top: 0;
 }
 
 .timeline p,
 .venue p {
   color: var(--muted);
   line-height: 1.75;
+}
+
+.intro .kicker,
+.timeline .kicker,
+.venue .kicker {
+  margin-bottom: 28px;
+  color: var(--signature-blue);
+  font-family: var(--display-font);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.12rem;
+  text-transform: uppercase;
 }
 
 .calendar-card {
@@ -362,11 +365,106 @@ h2 {
 }
 
 .address {
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
 .address-detail {
   margin-top: 5px;
+}
+
+.venue h2 {
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 32px;
+  font-weight: 520;
+}
+
+.map-card {
+  margin-top: 34px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.naver-map {
+  display: block;
+  width: 100%;
+  height: 270px;
+}
+
+.naver-map--error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.map-info-window {
+  min-width: 116px;
+  padding: 9px 12px 10px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 94%);
+  color: var(--ink);
+  text-align: center;
+  box-shadow: 0 8px 20px rgb(31 41 55 / 16%);
+}
+
+.map-info-window strong,
+.map-info-window span {
+  display: block;
+  white-space: nowrap;
+}
+
+.map-info-window strong {
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.map-info-window span {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.map-link-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.map-link {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.map-link__icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-link__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.address-copy-button {
+  width: 100%;
+  margin-top: 22px;
 }
 
 .action-row {
