@@ -215,7 +215,7 @@ a {
 }
 
 .intro {
-  padding: 86px 30px 82px;
+  padding: 60px 30px 82px;
   text-align: center;
 }
 
@@ -261,7 +261,7 @@ h2 {
 .timeline,
 .venue,
 .contacts {
-  padding-top: 78px;
+  padding-top: 60px;
   padding-bottom: 76px;
   background: var(--paper);
   text-align: center;
