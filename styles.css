@@ -13,7 +13,7 @@
   --well-line: 2px;
   --hero-gray: #69696b;
   --display-font: "the-seasons", "Cormorant Garamond", Didot, "Bodoni 72 Display", "Times New Roman", serif;
-  --detail-font: "fiona", "Gill Sans Nova", "Gill Sans", "Avenir Next", Arial, sans-serif;
+  --detail-font: var(--display-font);
   --white: #fff;
   --shadow: 0 16px 48px rgb(53 102 133 / 12%);
 }
