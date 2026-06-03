@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260601-fiona-date";
+import { invitation } from "./config.js?v=20260603-invitation-copy-1";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
