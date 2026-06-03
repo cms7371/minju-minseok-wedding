@@ -278,6 +278,7 @@ h2 {
 }
 
 .intro .kicker,
+.gallery .kicker,
 .timeline .kicker,
 .venue .kicker,
 .contacts .kicker {
@@ -690,20 +691,10 @@ h2 {
 }
 
 .gallery {
-  padding-top: 78px;
+  padding-top: 60px;
   padding-bottom: 76px;
   background: var(--paper);
   text-align: center;
-}
-
-.gallery .kicker {
-  margin-bottom: 28px;
-  color: var(--signature-blue);
-  font-family: var(--display-font);
-  font-size: 18px;
-  font-weight: 300;
-  letter-spacing: 0.12rem;
-  text-transform: uppercase;
 }
 
 .gallery-grid {
