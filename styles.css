@@ -14,7 +14,7 @@
   --hero-gray: #69696b;
   --display-font: "the-seasons", "Cormorant Garamond", Didot, "Bodoni 72 Display", "Times New Roman", serif;
   --detail-font: var(--display-font);
-  --korean-serif-font: "AppleMyungjo", "Noto Serif CJK KR", "Noto Serif KR", "Nanum Myeongjo", Batang, serif;
+  --korean-serif-font: var(--display-font);
   --white: #fff;
   --shadow: 0 16px 48px rgb(53 102 133 / 12%);
 }
