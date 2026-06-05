@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260603-gallery-4col-1";
+import { invitation } from "./config.js?v=20260605-gallery-preload-1";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -47,6 +47,7 @@ const fieldMap = {
 
 let galleryImages = [];
 let activeGalleryIndex = 0;
+const preloadedGalleryImages = new Map();
 
 const contactGroups = [
   {
@@ -190,6 +191,8 @@ function renderGallery() {
     button.append(img);
     list.append(button);
   });
+
+  scheduleGalleryPreload();
 }
 
 function getGalleryImages() {
@@ -226,6 +229,39 @@ function getLocalGalleryHost() {
 
 function stripTrailingSlash(value) {
   return value ? value.replace(/\/+$/, "") : "";
+}
+
+function scheduleGalleryPreload() {
+  if (!galleryImages.length) return;
+
+  const preload = () => {
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(preloadGalleryImages, { timeout: 1800 });
+      return;
+    }
+    setTimeout(preloadGalleryImages, 700);
+  };
+
+  if (document.readyState === "complete") {
+    preload();
+    return;
+  }
+
+  window.addEventListener("load", preload, { once: true });
+}
+
+function preloadGalleryImages() {
+  galleryImages.forEach((image) => {
+    if (preloadedGalleryImages.has(image.src)) return;
+
+    const preloadImage = new Image();
+    preloadImage.decoding = "async";
+    if ("fetchPriority" in preloadImage) {
+      preloadImage.fetchPriority = "low";
+    }
+    preloadImage.src = image.src;
+    preloadedGalleryImages.set(image.src, preloadImage);
+  });
 }
 
 function renderMap() {
