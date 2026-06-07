@@ -1,3 +1,11 @@
+@font-face {
+  font-display: swap;
+  font-family: "Gowun Batang Wedding";
+  font-style: normal;
+  font-weight: 400;
+  src: url("assets/fonts/gowun-batang-subset.woff2") format("woff2");
+}
+
 :root {
   color-scheme: light;
   --paper: #f7fbff;
@@ -14,7 +22,7 @@
   --hero-gray: #69696b;
   --display-font: "the-seasons", "Cormorant Garamond", Didot, "Bodoni 72 Display", "Times New Roman", serif;
   --detail-font: var(--display-font);
-  --korean-serif-font: var(--display-font);
+  --korean-serif-font: "Gowun Batang Wedding", var(--display-font);
   --white: #fff;
   --shadow: 0 16px 48px rgb(53 102 133 / 12%);
 }
