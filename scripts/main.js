@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260605-gallery-preload-1";
+import { invitation } from "./config.js?v=20260607-account-cards-1";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -108,21 +108,53 @@ function renderMessage() {
 
 function renderAccounts() {
   const list = $('[data-list="accounts"]');
+  if (!list) return;
   list.innerHTML = "";
-  invitation.accounts.forEach((account) => {
-    const item = document.createElement("div");
-    item.className = "account-item";
-    item.innerHTML = `
-      <strong>${account.side}</strong>
-      <p>${account.bank} ${account.number}</p>
-      <p>예금주 ${account.holder}</p>
-      <button class="button button--ghost" type="button">계좌 복사</button>
+
+  const panelId = "account-panel";
+  const groupNode = document.createElement("section");
+  groupNode.className = "account-group";
+  groupNode.innerHTML = `
+    <button class="account-group__toggle" type="button" aria-expanded="false" aria-controls="${panelId}" data-action="toggleAccountGroup">
+      <span>마음 전하실 곳</span>
+      <span class="account-group__mark" aria-hidden="true">+</span>
+    </button>
+    <div class="account-group__panel" id="${panelId}"></div>
+  `;
+
+  const panel = $(".account-group__panel", groupNode);
+  invitation.accounts.forEach((group) => {
+    const card = document.createElement("article");
+    card.className = "account-card";
+    card.innerHTML = `
+      <h3>${group.title}</h3>
+      <div class="account-card__members"></div>
     `;
-    $("button", item).addEventListener("click", () => {
-      copyText(`${account.bank} ${account.number} ${account.holder}`);
+    const members = $(".account-card__members", card);
+
+    group.members.forEach((account) => {
+      const item = document.createElement("div");
+      item.className = "account-item";
+      item.innerHTML = `
+        <span class="account-item__label">${account.label}</span>
+        <strong>${account.name}</strong>
+        <span class="account-item__number">${account.bank} ${account.number}</span>
+        <div class="account-item__actions">
+          <button class="account-action-button" type="button" data-copy-account="${account.bank} ${account.number} ${account.name}" aria-label="${account.label} 계좌 복사">
+            ${icons.copy}
+          </button>
+          <a class="account-action-button account-action-button--toss" href="${account.tossUrl || "#"}" target="_blank" rel="noreferrer" data-toss-link="${account.tossUrl || ""}" aria-label="${account.label} 토스로 송금">
+            <img src="assets/payment/toss-symbol.png" alt="" loading="lazy" />
+          </a>
+        </div>
+      `;
+      members.append(item);
     });
-    list.append(item);
+
+    panel.append(card);
   });
+
+  list.append(groupNode);
 }
 
 function renderContacts() {
@@ -446,8 +478,9 @@ function wireActions() {
     event.preventDefault();
     copyText(invitation.wedding.address);
   });
-  $('[data-action="toggleAccounts"]').addEventListener("click", (event) => {
-    toggleList(event.currentTarget, $('[data-list="accounts"]'));
+  $('[data-action="toggleAccountGroup"]')?.addEventListener("click", (event) => {
+    const panel = document.getElementById(event.currentTarget.getAttribute("aria-controls"));
+    toggleAccountGroup(event.currentTarget, panel);
   });
   $$('[data-action="toggleContactGroup"]').forEach((button) => {
     button.addEventListener("click", (event) => {
@@ -458,6 +491,18 @@ function wireActions() {
 
   $$("[data-copy-phone]").forEach((button) => {
     button.addEventListener("click", () => copyText(button.dataset.copyPhone));
+  });
+
+  $$("[data-copy-account]").forEach((button) => {
+    button.addEventListener("click", () => copyText(button.dataset.copyAccount));
+  });
+
+  $$("[data-toss-link]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (link.dataset.tossLink) return;
+      event.preventDefault();
+      showToast("토스 링크를 준비 중입니다.");
+    });
   });
 
   $$("[data-gallery-index]").forEach((button) => {
@@ -523,6 +568,24 @@ function toggleContactGroup(button, panel) {
   const expanded = button.getAttribute("aria-expanded") === "true";
   button.setAttribute("aria-expanded", String(!expanded));
   $(".contact-group__mark", button).textContent = expanded ? "+" : "-";
+
+  if (expanded) {
+    panel.style.maxHeight = `${panel.scrollHeight}px`;
+    requestAnimationFrame(() => {
+      panel.style.maxHeight = "0px";
+      panel.dataset.open = "false";
+    });
+    return;
+  }
+
+  panel.dataset.open = "true";
+  panel.style.maxHeight = `${panel.scrollHeight}px`;
+}
+
+function toggleAccountGroup(button, panel) {
+  const expanded = button.getAttribute("aria-expanded") === "true";
+  button.setAttribute("aria-expanded", String(!expanded));
+  $(".account-group__mark", button).textContent = expanded ? "+" : "-";
 
   if (expanded) {
     panel.style.maxHeight = `${panel.scrollHeight}px`;

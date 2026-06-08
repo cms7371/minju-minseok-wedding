@@ -42,8 +42,22 @@ export const invitation = {
     brideMother: "010-5555-5555",
   },
   accounts: [
-    { side: "신랑", bank: "국민은행", number: "000000-00-000000", holder: "채민석" },
-    { side: "신부", bank: "신한은행", number: "000-000-000000", holder: "김민주" },
+    {
+      title: "신랑측",
+      members: [
+        { label: "신랑", name: "채민석", bank: "국민은행", number: "000000-00-000000", tossUrl: "" },
+        { label: "아버지", name: "채규필", bank: "국민은행", number: "000000-00-000000", tossUrl: "" },
+        { label: "어머니", name: "박미화", bank: "국민은행", number: "000000-00-000000", tossUrl: "" },
+      ],
+    },
+    {
+      title: "신부측",
+      members: [
+        { label: "신부", name: "김민주", bank: "신한은행", number: "000-000-000000", tossUrl: "" },
+        { label: "아버지", name: "김일회", bank: "신한은행", number: "000-000-000000", tossUrl: "" },
+        { label: "어머니", name: "이의진", bank: "신한은행", number: "000-000-000000", tossUrl: "" },
+      ],
+    },
   ],
   gallery: {
     productionHost: "https://assets.minju-minseok-wedding.life",
