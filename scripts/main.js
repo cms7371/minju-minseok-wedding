@@ -423,7 +423,6 @@ function renderCalendar() {
   const year = date.getFullYear();
   const month = date.getMonth();
   const targetDay = date.getDate();
-  const firstWeekday = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
   const timeText = `${date.getHours() < 12 ? "오전" : "오후"} ${date.getHours() % 12 || 12}시`;
@@ -447,9 +446,9 @@ function renderCalendar() {
     grid.append(cell);
   });
 
-  const totalCells = Math.ceil((firstWeekday + daysInMonth) / 7) * 7;
-  for (let index = 0; index < totalCells; index++) {
-    const day = index - firstWeekday + 1;
+  const weekStart = targetDay - date.getDay();
+  for (let index = 0; index < 7; index++) {
+    const day = weekStart + index;
     const cell = document.createElement("span");
     cell.className = "calendar-card__day";
     if (day < 1 || day > daysInMonth) {

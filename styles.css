@@ -148,9 +148,7 @@ a {
   position: relative;
   width: calc(100% - 42px);
   margin: 32px auto 24px;
-  padding: 14px;
-  border: 2px solid #70777c;
-  background: rgb(255 255 255 / 45%);
+  padding: 0;
 }
 
 .hero__photo {
