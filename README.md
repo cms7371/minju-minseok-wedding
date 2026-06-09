@@ -16,40 +16,26 @@ Replace these placeholders before publishing:
 
 ## Private info
 
-Contact phone numbers and bank accounts are loaded from R2 instead of being committed to this repository.
+Contact phone numbers and bank accounts are loaded at runtime instead of being committed to this repository.
 
-1. Edit `/Users/minseok/Desktop/workspace/private-info.json`.
-2. Upload it to R2 at `private-info.json`.
-3. The site reads it from `https://assets.minju-minseok-wedding.life/private-info.json`.
-
-R2 CORS must allow the site origin, for example `https://minju-minseok-wedding.life`. Add `http://localhost:4173` and `http://localhost:4174` if you want to test the JSON fetch locally.
-
-For local testing, `scripts/local-overrides.js` is ignored by Git and can point localhost at a local-only R2 host:
-
-```js
-export default {
-  r2Host: "<local-r2-host>",
-};
-```
-
-Expected JSON shape:
+Expected data shape:
 
 ```json
 {
   "people": {
     "groom": {
-      "phone": "010-0000-0000",
+      "phone": "...",
       "account": {
-        "bank": "국민",
-        "bankDisplay": "국민은행",
-        "number": "123456-78-901234"
+        "bank": "...",
+        "bankDisplay": "...",
+        "number": "..."
       }
     }
   }
 }
 ```
 
-`bank` is used for the Toss deep link, `bankDisplay` is shown on the page, and the account number can include hyphens. The Toss link is generated as `supertoss://send?bank=...&accountNo=...` with non-digits removed from the account number.
+`bank` is used for the Toss deep link, `bankDisplay` is shown on the page, and the account number can include hyphens.
 
 ## Preview locally
 
