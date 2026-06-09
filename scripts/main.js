@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260607-account-cards-1";
+import { invitation } from "./config.js?v=20260609-private-info-1";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -49,25 +49,11 @@ const fieldMap = {
 let galleryImages = [];
 let activeGalleryIndex = 0;
 const preloadedGalleryImages = new Map();
+const unavailableText = "일시 오류";
+let privatePeople = {};
+let localOverrides = {};
 
-const contactGroups = [
-  {
-    title: "신랑측",
-    members: [
-      { key: "groom", label: "신랑", name: invitation.couple.groomFull },
-      { key: "groomFather", label: "아버지", name: "채규필" },
-      { key: "groomMother", label: "어머니", name: "박미화" },
-    ],
-  },
-  {
-    title: "신부측",
-    members: [
-      { key: "bride", label: "신부", name: invitation.couple.brideFull },
-      { key: "brideFather", label: "아버지", name: "김일회" },
-      { key: "brideMother", label: "어머니", name: "이의진" },
-    ],
-  },
-];
+const peopleGroups = invitation.peopleGroups || [];
 
 const icons = {
   copy: `
@@ -124,7 +110,7 @@ function renderAccounts() {
   `;
 
   const panel = $(".account-group__panel", groupNode);
-  invitation.accounts.forEach((group) => {
+  peopleGroups.forEach((group) => {
     const card = document.createElement("article");
     card.className = "account-card";
     card.innerHTML = `
@@ -133,18 +119,24 @@ function renderAccounts() {
     `;
     const members = $(".account-card__members", card);
 
-    group.members.forEach((account) => {
+    group.members.forEach((person) => {
+      const account = getPersonInfo(person.key).account || {};
+      const bank = account.bankDisplay || account.bank || unavailableText;
+      const number = account.number || unavailableText;
+      const accountText = isUnavailable(bank) && isUnavailable(number) ? unavailableText : `${bank} ${number}`;
+      const tossUrl = buildTossUrl(account);
+      const copyValue = isUnavailable(bank) || isUnavailable(number) ? "" : `${bank} ${number} ${person.name}`;
       const item = document.createElement("div");
       item.className = "account-item";
       item.innerHTML = `
-        <span class="account-item__label">${account.label}</span>
-        <strong>${account.name}</strong>
-        <span class="account-item__number">${account.bank} ${account.number}</span>
+        <span class="account-item__label">${person.label}</span>
+        <strong>${person.name}</strong>
+        <span class="account-item__number">${accountText}</span>
         <div class="account-item__actions">
-          <button class="account-action-button" type="button" data-copy-account="${account.bank} ${account.number} ${account.name}" aria-label="${account.label} 계좌 복사">
+          <button class="account-action-button" type="button" data-copy-account="${copyValue}" aria-label="${person.label} 계좌 복사" ${copyValue ? "" : "disabled"}>
             ${icons.copy}
           </button>
-          <a class="account-action-button account-action-button--toss" href="${account.tossUrl || "#"}" target="_blank" rel="noreferrer" data-toss-link="${account.tossUrl || ""}" aria-label="${account.label} 토스로 송금">
+          <a class="account-action-button account-action-button--toss" href="${tossUrl || "#"}" target="_blank" rel="noreferrer" data-toss-link="${tossUrl}" aria-label="${person.label} 토스로 송금">
             <img src="assets/payment/toss-symbol.png" alt="" loading="lazy" />
           </a>
         </div>
@@ -163,7 +155,7 @@ function renderContacts() {
   if (!list) return;
   list.innerHTML = "";
 
-  contactGroups.forEach((group, index) => {
+  peopleGroups.forEach((group, index) => {
     const panelId = `contact-panel-${index}`;
     const groupNode = document.createElement("section");
     groupNode.className = "contact-group";
@@ -177,8 +169,9 @@ function renderContacts() {
     const panel = $(".contact-group__panel", groupNode);
 
     group.members.forEach((entry) => {
-      const phone = invitation.contacts[entry.key];
-      if (!phone) return;
+      const phone = getPersonInfo(entry.key).phone || unavailableText;
+      const phoneNumber = phone.replace(/\D/g, "");
+      const hasPhone = !isUnavailable(phone) && phoneNumber;
 
       const item = document.createElement("div");
       item.className = "contact-item";
@@ -187,10 +180,10 @@ function renderContacts() {
         <strong>${entry.name}</strong>
         <span class="contact-item__phone">${phone}</span>
         <div class="contact-item__actions">
-          <button class="contact-icon-button" type="button" data-copy-phone="${phone}" aria-label="${entry.label} 번호 복사">
+          <button class="contact-icon-button" type="button" data-copy-phone="${hasPhone ? phone : ""}" aria-label="${entry.label} 번호 복사" ${hasPhone ? "" : "disabled"}>
             ${icons.copy}
           </button>
-          <a class="contact-icon-button" href="tel:${phone.replaceAll("-", "")}" aria-label="${entry.label}에게 전화">
+          <a class="contact-icon-button" href="${hasPhone ? `tel:${phoneNumber}` : "#"}" aria-label="${entry.label}에게 전화" data-phone-link="${hasPhone ? phoneNumber : ""}">
             ${icons.phone}
           </a>
         </div>
@@ -248,7 +241,7 @@ function getGalleryImages() {
 
 function getGalleryHost() {
   const queryHost = new URLSearchParams(location.search).get("galleryHost")?.trim();
-  const localHost = getLocalGalleryHost();
+  const localHost = getLocalGalleryHost() || getLocalOverrideHost("galleryHost");
   return stripTrailingSlash(queryHost || localHost || invitation.gallery.productionHost);
 }
 
@@ -313,6 +306,66 @@ function encodeIntentValue(value) {
 
 function isAndroidDevice() {
   return /Android/i.test(navigator.userAgent);
+}
+
+async function loadPrivateInfo() {
+  try {
+    const response = await fetch(getPrivateInfoUrl(), { cache: "no-store" });
+    if (!response.ok) throw new Error(`Private info request failed: ${response.status}`);
+    const data = await response.json();
+    privatePeople = data.people || {};
+  } catch (error) {
+    console.warn(error);
+    privatePeople = {};
+  }
+}
+
+function getPrivateInfoUrl() {
+  const info = invitation.privateInfo || {};
+  const host = stripTrailingSlash(getLocalOverrideHost("privateInfoHost") || info.host || "");
+  const path = (info.path || "").replace(/^\/+/, "");
+  return [host, path].filter(Boolean).join("/");
+}
+
+async function loadLocalOverrides() {
+  if (!isLocalOrigin()) return;
+
+  try {
+    const overrides = await import("./local-overrides.js");
+    localOverrides = overrides.default || {};
+  } catch {
+    localOverrides = {};
+  }
+}
+
+function getLocalOverrideHost(key) {
+  return stripTrailingSlash(localOverrides[key] || localOverrides.r2Host || "");
+}
+
+function isLocalOrigin() {
+  return ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
+}
+
+function getPersonInfo(key) {
+  return privatePeople[key] || {};
+}
+
+function buildTossUrl(account) {
+  if (account.tossUrl) return account.tossUrl;
+
+  const bank = account.bank || account.bankDisplay || "";
+  const accountNo = account.accountNo || String(account.number || "").replace(/\D/g, "");
+  if (!bank || !accountNo) return "";
+
+  const params = new URLSearchParams({
+    bank,
+    accountNo,
+  });
+  return `supertoss://send?${params.toString()}`;
+}
+
+function isUnavailable(value) {
+  return !value || value === unavailableText;
 }
 
 function scheduleGalleryPreload() {
@@ -562,6 +615,14 @@ function wireActions() {
     });
   });
 
+  $$("[data-phone-link]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (link.dataset.phoneLink) return;
+      event.preventDefault();
+      showToast("연락처를 불러오지 못했습니다.");
+    });
+  });
+
   $$("[data-gallery-index]").forEach((button) => {
     button.addEventListener("click", () => openGallery(Number(button.dataset.galleryIndex)));
   });
@@ -681,11 +742,18 @@ function showToast(text) {
   }, 1800);
 }
 
-renderFields();
-renderMessage();
-renderAccounts();
-renderContacts();
-renderGallery();
-renderMap();
-renderCalendar();
-wireActions();
+async function init() {
+  await loadLocalOverrides();
+  renderFields();
+  renderMessage();
+  renderGallery();
+  renderMap();
+  renderCalendar();
+
+  await loadPrivateInfo();
+  renderAccounts();
+  renderContacts();
+  wireActions();
+}
+
+init();

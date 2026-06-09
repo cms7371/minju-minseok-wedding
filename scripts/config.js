@@ -33,29 +33,25 @@ export const invitation = {
     "귀한 걸음으로",
     "저희의 시작을 함께해 주세요.",
   ],
-  contacts: {
-    groom: "010-0000-0000",
-    bride: "010-1111-1111",
-    groomFather: "010-2222-2222",
-    groomMother: "010-4444-4444",
-    brideFather: "010-3333-3333",
-    brideMother: "010-5555-5555",
+  privateInfo: {
+    host: "https://assets.minju-minseok-wedding.life",
+    path: "private-info.json",
   },
-  accounts: [
+  peopleGroups: [
     {
       title: "신랑측",
       members: [
-        { label: "신랑", name: "채민석", bank: "국민은행", number: "000000-00-000000", tossUrl: "" },
-        { label: "아버지", name: "채규필", bank: "국민은행", number: "000000-00-000000", tossUrl: "" },
-        { label: "어머니", name: "박미화", bank: "국민은행", number: "000000-00-000000", tossUrl: "" },
+        { key: "groom", label: "신랑", name: "채민석" },
+        { key: "groomFather", label: "아버지", name: "채규필" },
+        { key: "groomMother", label: "어머니", name: "박미화" },
       ],
     },
     {
       title: "신부측",
       members: [
-        { label: "신부", name: "김민주", bank: "신한은행", number: "000-000-000000", tossUrl: "" },
-        { label: "아버지", name: "김일회", bank: "신한은행", number: "000-000-000000", tossUrl: "" },
-        { label: "어머니", name: "이의진", bank: "신한은행", number: "000-000-000000", tossUrl: "" },
+        { key: "bride", label: "신부", name: "김민주" },
+        { key: "brideFather", label: "아버지", name: "김일회" },
+        { key: "brideMother", label: "어머니", name: "이의진" },
       ],
     },
   ],
