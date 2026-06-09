@@ -22,6 +22,7 @@ const formatDate = new Intl.DateTimeFormat("ko-KR", {
   minute: "2-digit",
   hour12: true,
 });
+const calendarEndDate = new Date(date.getTime() + 2 * 60 * 60 * 1000);
 
 const fieldMap = {
   groom: invitation.couple.groom,
@@ -263,6 +264,57 @@ function stripTrailingSlash(value) {
   return value ? value.replace(/\/+$/, "") : "";
 }
 
+function buildCalendarDescription() {
+  return [
+    invitation.wedding.dateText,
+    `${invitation.wedding.venue} ${invitation.wedding.hall}`,
+    invitation.wedding.address,
+    location.origin,
+  ].filter(Boolean).join("\n");
+}
+
+function buildGoogleCalendarUrl() {
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: invitation.wedding.calendarTitle,
+    dates: `${formatGoogleCalendarDate(date)}/${formatGoogleCalendarDate(calendarEndDate)}`,
+    ctz: "Asia/Seoul",
+    details: buildCalendarDescription(),
+    location: `${invitation.wedding.venue} ${invitation.wedding.hall}, ${invitation.wedding.address}`,
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+function buildAndroidCalendarIntentUrl() {
+  const fallbackUrl = buildGoogleCalendarUrl();
+  const fields = [
+    "intent://com.android.calendar/events#Intent",
+    "scheme=content",
+    "action=android.intent.action.INSERT",
+    "type=vnd.android.cursor.dir/event",
+    `l.beginTime=${date.getTime()}`,
+    `l.endTime=${calendarEndDate.getTime()}`,
+    `S.title=${encodeIntentValue(invitation.wedding.calendarTitle)}`,
+    `S.description=${encodeIntentValue(buildCalendarDescription())}`,
+    `S.eventLocation=${encodeIntentValue(`${invitation.wedding.venue} ${invitation.wedding.hall}, ${invitation.wedding.address}`)}`,
+    `S.browser_fallback_url=${encodeURIComponent(fallbackUrl)}`,
+    "end",
+  ];
+  return fields.join(";");
+}
+
+function formatGoogleCalendarDate(value) {
+  return value.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+}
+
+function encodeIntentValue(value) {
+  return encodeURIComponent(value).replace(/[!'()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`);
+}
+
+function isAndroidDevice() {
+  return /Android/i.test(navigator.userAgent);
+}
+
 function scheduleGalleryPreload() {
   if (!galleryImages.length) return;
 
@@ -476,6 +528,12 @@ function wireActions() {
   $('[data-action="copyAddress"]').addEventListener("click", (event) => {
     event.preventDefault();
     copyText(invitation.wedding.address);
+  });
+  $('[data-action="calendar"]')?.addEventListener("click", (event) => {
+    if (!isAndroidDevice()) return;
+
+    event.preventDefault();
+    location.href = buildAndroidCalendarIntentUrl();
   });
   $('[data-action="toggleAccountGroup"]')?.addEventListener("click", (event) => {
     const panel = document.getElementById(event.currentTarget.getAttribute("aria-controls"));
