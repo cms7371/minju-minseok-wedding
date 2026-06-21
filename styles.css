@@ -481,6 +481,15 @@ h2 {
   margin-top: 22px;
 }
 
+.shuttle-button {
+  width: 100%;
+  margin-top: 24px;
+}
+
+.shuttle-button + .address-copy-button {
+  margin-top: 10px;
+}
+
 .action-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -20,6 +20,8 @@ export const invitation = {
     address: "서울시 강남구 테헤란로 406 A동 2층 웨딩홀",
     addressDetail: "대치동, 샹제리제센터",
     transit: "선릉역 2호선 지하 연결 · 단독홀",
+    parking: "건물 주차 2시간 무료",
+    shuttleFormUrl: "https://forms.gle/uAnaQeAtqAZ7ykhLA",
     latitude: 37.504467941009,
     longitude: 127.04991900474,
     naverMapClientId: "an0z46c51m",

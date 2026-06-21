@@ -14,8 +14,8 @@
     <link rel="preconnect" href="https://assets.minju-minseok-wedding.life" />
     <link rel="preload" href="assets/fonts/gowun-batang-subset.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="https://use.typekit.net/mvm3pnb.css" />
-    <link rel="stylesheet" href="styles.css?v=20260609-calendar-title-1" />
-    <script type="module" src="scripts/main.js?v=20260609-android-calendar-3"></script>
+    <link rel="stylesheet" href="styles.css?v=20260621-location-info-1" />
+    <script type="module" src="scripts/main.js?v=20260621-location-info-1"></script>
   </head>
   <body>
     <main class="page-shell">
@@ -63,10 +63,12 @@
         <p class="address" data-field="address"></p>
         <p class="address-detail" data-field="addressDetail"></p>
         <p class="address-detail" data-field="transit"></p>
+        <p class="address-detail" data-field="parking"></p>
         <div class="map-card">
           <div class="naver-map" data-map-embed role="img" aria-label="르비르모어 지도"></div>
         </div>
         <div class="map-link-grid" data-list="mapLinks"></div>
+        <a class="button button--ghost shuttle-button" href="#" target="_blank" rel="noreferrer" data-field-link="shuttleFormUrl">세종 대절버스 신청하기</a>
         <button class="button button--ghost address-copy-button" type="button" data-action="copyAddress">주소 복사</button>
       </section>
 

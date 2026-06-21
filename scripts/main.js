@@ -1,4 +1,4 @@
-import { invitation } from "./config.js?v=20260609-private-info-1";
+import { invitation } from "./config.js?v=20260621-location-info-1";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -37,6 +37,7 @@ const fieldMap = {
   address: invitation.wedding.address,
   addressDetail: invitation.wedding.addressDetail,
   transit: invitation.wedding.transit,
+  parking: invitation.wedding.parking,
   venueLine: `${invitation.wedding.venue} ${invitation.wedding.hall}`,
   venueUpper: (invitation.wedding.venueEnglish || invitation.wedding.venue).toUpperCase(),
   heroYear: String(date.getFullYear()),
