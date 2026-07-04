@@ -79,9 +79,9 @@ function renderFields() {
     node.href = invitation.wedding[node.dataset.fieldLink] || "#";
   });
 
-  document.title = `${invitation.couple.groom} · ${invitation.couple.bride} 결혼식`;
+  document.title = `${invitation.couple.bride} ♡ ${invitation.couple.groom}, 결혼식에 초대합니다`;
   $('meta[property="og:title"]').content = document.title;
-  $('meta[property="og:description"]').content = invitation.wedding.dateText;
+  $('meta[property="og:description"]').content = `${invitation.wedding.dateText} · ${invitation.wedding.venue}`;
 }
 
 function renderMessage() {
